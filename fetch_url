@@ -1,0 +1,23 @@
+#! /usr/bin/env bash
+# vi:ft=sh
+FETCH_OUTPUT_DIR=${FETCH_OUTPUT_DIR:-$(dirname $(mktemp --tmpdir -u))}
+URL=$(cat | jq 'if has("body") then
+  .body.url
+else if has("url") then
+  .url
+else
+  "error"
+end')
+INPUT=$(cat)
+if echo $INPUT | grep \"url\" > /dev/null 2>&1; then
+  if echo $INPUT | grep \"body\" > /dev/null 2>&1; then
+    URL=$(echo $INPUT | jq --raw-output ".body.url")
+  else
+    URL=$(echo $INPUT | jq --raw-output ".url")
+  fi
+else
+  echo "You must provide a URL to download, and I couldn't find one in ${INPUT}" >&2
+  exit 1
+fi
+echo fetching $URL to ${FETCH_OUTPUT_DIR}
+aria2c --dir $FETCH_OUTPUT_DIR $URL
