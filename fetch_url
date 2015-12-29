@@ -12,5 +12,5 @@ if [ "${URL}" = "error" ]; then
   echo "You must provide a URL to download, and I couldn't find one in ${INPUT}" >&2
   exit 1
 fi
-echo fetching $URL to ${FETCH_OUTPUT_DIR}
+echo "fetching $URL to ${FETCH_OUTPUT_DIR}" >&2
 aria2c --dir $FETCH_OUTPUT_DIR $URL
