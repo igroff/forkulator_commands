@@ -1,0 +1,2 @@
+#! /usr/bin/env bash
+cat | logger -t logger_command
